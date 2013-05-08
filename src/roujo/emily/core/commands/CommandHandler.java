@@ -1,9 +1,11 @@
 package roujo.emily.core.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import roujo.emily.core.MessageContext;
+import roujo.emily.core.extensibility.PluginManager;
+import roujo.emily.core.extensibility.capabilities.CommandManager;
 import roujo.emily.core.util.StringHelper;
 
 public class CommandHandler {
@@ -18,17 +20,11 @@ public class CommandHandler {
 			message = context.getMessage();
 		}
 		
-		
-		
-		for (CommandType type : CommandType.values()) {
-			Command command = type.getCommand();
-			Pattern pattern = command.getPattern(); 
-			if (pattern.matcher(message).matches()) {
-				if(command.isValidSender(context)) {
-					return command.execute(context);
-				} else {
-					return false;
-				}
+		List<CommandManager> commandManagers = PluginManager.getInstance().getCommandManagers();
+		for (CommandManager manager : commandManagers) {
+			if(manager.matchesMessage(context)) {
+				manager.processMessage(context);
+				return true;
 			}
 		}
 		return false;

@@ -7,12 +7,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import roujo.emily.core.commands.CommandHandler;
 import roujo.emily.core.extensibility.capabilities.Capability;
+import roujo.emily.core.extensibility.capabilities.CommandManager;
 
 public class PluginManager {
 	private static PluginManager INSTANCE = new PluginManager();
@@ -24,11 +25,11 @@ public class PluginManager {
 	private Map<String, PluginInfo> loadedPlugins;
 	
 	// Plugin types
-	private List<CommandHandler> commandHandlers;
+	private List<CommandManager> commandManagers;
 	
 	private PluginManager() {
 		loadedPlugins = new LinkedHashMap<String, PluginInfo>();
-		commandHandlers = new ArrayList<CommandHandler>();
+		commandManagers = new ArrayList<CommandManager>();
 	}
 	
 	public boolean reloadPlugin(String pluginName, File pluginFile) {
@@ -90,12 +91,16 @@ public class PluginManager {
 			// Every cast here should not fail, as the capabilities
 			// were discovered by using Class.isInstance(plugin)
 			case ManageCommands:
-				commandHandlers.add((CommandHandler) pluginInfo.getPlugin());
+				commandManagers.add((CommandManager) pluginInfo.getPlugin());
 				break;
 			default:
 				System.out.println("Unsupported capability!");
 				break;			
 			}
 		}
+	}
+	
+	public List<CommandManager> getCommandManagers() {
+		return Collections.unmodifiableList(commandManagers); 
 	}
 }

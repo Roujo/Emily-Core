@@ -5,5 +5,5 @@ import roujo.emily.core.extensibility.Plugin;
 
 public interface CommandManager extends Plugin {
 	boolean matchesMessage(MessageContext context);
-	boolean parseMessage(MessageContext context);
+	boolean processMessage(MessageContext context);
 }
