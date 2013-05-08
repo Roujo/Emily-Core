@@ -49,11 +49,11 @@ public class PluginManager {
 		try {
 			URL pluginURL = new URL("file:" + pluginFile.getAbsolutePath());
 			URLClassLoader loader = URLClassLoader.newInstance(new URL[]{ pluginURL }, getClass().getClassLoader());
-			Class<? extends Plugin> hatManagerClass = Class.forName(pluginName + ".Plugin", true, loader).asSubclass(Plugin.class);
-			Constructor<? extends Plugin> constructor = hatManagerClass.getConstructor();
-			Plugin hatManager = constructor.newInstance();
-			hatManager.load();
-			pluginInfo = new PluginInfo(pluginName, hatManager);
+			Class<? extends Plugin> pluginClass = Class.forName(pluginName + ".PluginController", true, loader).asSubclass(Plugin.class);
+			Constructor<? extends Plugin> constructor = pluginClass.getConstructor();
+			Plugin plugin = constructor.newInstance();
+			plugin.load();
+			pluginInfo = new PluginInfo(pluginName, plugin);
 			loadedPlugins.put(pluginName, pluginInfo);
 			loader.close();
 			
