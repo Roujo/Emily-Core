@@ -1,11 +1,14 @@
 package roujo.emily.core;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import org.pircbotx.PircBotX;
+
+import roujo.emily.core.extensibility.PluginManager;
 
 public class Main {
 
@@ -13,20 +16,30 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// Load all plugins
+		for (File file : new File("plugins/").listFiles()) {
+			if(file.getName().endsWith(".jar")) {
+				String pluginName = file.getName().substring(0, file.getName().length() - 4);
+				PluginManager.getInstance().loadPlugin(pluginName, file);
+			}
+		}
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
 		Emily emily;
-		if(args.length == 0) {
+		if (args.length == 0) {
 			String name, password;
 			try {
-				System.out.println("Emily: How would you like to name me? [Emily]");
+				System.out
+						.println("Emily: How would you like to name me? [Emily]");
 				name = reader.readLine();
-				if(name.equals(""))
+				if (name.equals(""))
 					name = "Emily";
 				password = reader.readLine();
 			} catch (IOException e) {
 				logError(e);
-				System.out.println("Emily: I'll just call myself Emily, mmkay? =)");
+				System.out
+						.println("Emily: I'll just call myself Emily, mmkay? =)");
 				name = "Emily";
 				password = "";
 			}
@@ -34,7 +47,7 @@ public class Main {
 		} else {
 			emily = new Emily(args[0], args[1]);
 		}
-		
+
 		PircBotX bot = emily.getBot();
 		bot.setVerbose(true);
 
@@ -63,13 +76,11 @@ public class Main {
 		}
 
 		// Console Messages have to be reworked
-		/*while (emily.isConnected()) {
-			try {
-				emily.onConsoleMessage(reader.readLine());
-			} catch (IOException e) {
-				logError(e);
-			}
-		}*/
+		/*
+		 * while (emily.isConnected()) { try {
+		 * emily.onConsoleMessage(reader.readLine()); } catch (IOException e) {
+		 * logError(e); } }
+		 */
 	}
 
 	private static void logError(Exception e) {

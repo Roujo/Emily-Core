@@ -66,6 +66,7 @@ public class PluginManager {
 			return false;
 		}
 		
+		System.out.println(pluginName + " has been loaded successfully.");
 		return true;
 	}
 
@@ -78,6 +79,7 @@ public class PluginManager {
 		PluginInfo pluginInfo = loadedPlugins.get(pluginName);
 		pluginInfo.getPlugin().unload();
 		loadedPlugins.remove(pluginName);
+		System.out.println(pluginName + " has been unloaded successfully.");
 		return true;
 	}
 	
