@@ -1,11 +1,9 @@
 package roujo.emily.core.commands;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 import roujo.emily.core.MessageContext;
 import roujo.emily.core.extensibility.PluginManager;
-import roujo.emily.core.extensibility.capabilities.CommandManager;
 import roujo.emily.core.extensibility.capabilities.CommandUser;
 import roujo.emily.core.util.StringHelper;
 
