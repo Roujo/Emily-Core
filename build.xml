@@ -3,12 +3,12 @@
 <!-- ====================================================================== 
      May 3rd, 2013                                                  
 
-     Emily    
+     Emily-Core   
      An IRC Bot done for fun.
                    
      Jonathan Rouillard                                                               
      ====================================================================== -->
-<project name="Emily" default="default">
+<project name="Emily-Core" default="default">
 	<description>
 		An IRC Bot done for fun.
     </description>
