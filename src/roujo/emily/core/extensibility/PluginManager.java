@@ -7,13 +7,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import roujo.emily.core.extensibility.capabilities.Capability;
+import roujo.emily.core.extensibility.capabilities.CapabilityUser;
 import roujo.emily.core.extensibility.capabilities.CommandManager;
+import roujo.emily.core.extensibility.capabilities.CommandUser;
 
 public class PluginManager {
 	private static PluginManager INSTANCE = new PluginManager();
@@ -80,8 +81,18 @@ public class PluginManager {
 		return true;
 	}
 	
-	public PluginInfo getPluginInfo(String pluginName) {
-		return loadedPlugins.get(pluginName);
+	public boolean useCapability(CapabilityUser<? extends CommandManager> capabilityUser) {
+		switch(capabilityUser.getRequestedCapability()) {
+		case ManageCommands:
+			for(CommandManager manager : commandManagers) {
+				if(((CommandUser) capabilityUser).use(manager))
+					return true;
+			}
+			return false;
+		default:
+			System.out.println("Unsupported capability!");
+			return false;
+		}
 	}
 	
 	private void processPlugin(PluginInfo pluginInfo) {
@@ -98,9 +109,5 @@ public class PluginManager {
 				break;			
 			}
 		}
-	}
-	
-	public List<CommandManager> getCommandManagers() {
-		return Collections.unmodifiableList(commandManagers); 
 	}
 }
