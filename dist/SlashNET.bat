@@ -1,1 +1,0 @@
-java -jar Emily.jar Aurora Em4Ever# irc.slashdot.org #skynet #tobaton #amenti
