@@ -57,7 +57,7 @@ public class MessageContext {
 	}
 
 	public String getMessage() {
-		return message;
+		return hasBeenProcessed() ? processedMessage : message;
 	}
 	
 	public boolean hasBeenProcessed() {
@@ -66,6 +66,10 @@ public class MessageContext {
 	
 	public String getProcessedMessage() {
 		return processedMessage;
+	}
+	
+	public String getRawMessage() {
+		return message;
 	}
 	
 	public void setProcessedMessage(String processedMessage) {
