@@ -16,12 +16,6 @@ public class CommandUser implements CapabilityUser<CommandManager> {
 
 	@Override
 	public boolean use(CommandManager commandManager) {
-		if(commandManager.matchesMessage(context)) {
-			commandManager.processMessage(context);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+		return commandManager.processMessage(context);
+	}	
 }
