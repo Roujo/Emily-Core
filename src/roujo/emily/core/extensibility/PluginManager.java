@@ -36,9 +36,15 @@ public class PluginManager {
 		capabilityManagers.put(Capability.ManageCommands, new ArrayList<CapabilityManager>());
 	}
 	
-	public boolean reloadPlugin(String pluginName, File pluginFile) {
-		unloadPlugin(pluginName);
-		return loadPlugin(pluginName, pluginFile);
+	public boolean reloadPlugin(String pluginName) {
+		if(loadedPlugins.containsKey(pluginName)) {
+			PluginInfo pluginInfo = loadedPlugins.get(pluginName);
+			return unloadPlugin(pluginName) && loadPlugin(pluginName, pluginInfo.getPluginFile());
+		} else {
+			System.out.println(pluginName + " isn't loaded.");
+			return false;
+		}
+		
 	}
 	
 	public boolean loadPlugin(String pluginName, File pluginFile) {
