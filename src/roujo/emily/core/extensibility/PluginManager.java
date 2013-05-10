@@ -48,9 +48,7 @@ public class PluginManager {
 			System.out.println(pluginName + " was already loaded.");
 			return false;
 		}
-		
-		PluginInfo pluginInfo = null;
-		
+				
 		try {
 			URL pluginURL = new URL("file:" + pluginFile.getAbsolutePath());
 			URLClassLoader loader = URLClassLoader.newInstance(new URL[]{ pluginURL }, getClass().getClassLoader());
@@ -58,7 +56,7 @@ public class PluginManager {
 			Constructor<? extends Plugin> constructor = pluginClass.getConstructor();
 			Plugin plugin = constructor.newInstance();
 			plugin.load();
-			pluginInfo = new PluginInfo(pluginName, plugin);
+			PluginInfo pluginInfo = new PluginInfo(pluginName, pluginFile, plugin);
 			loadedPlugins.put(pluginName, pluginInfo);
 			loader.close();
 			
