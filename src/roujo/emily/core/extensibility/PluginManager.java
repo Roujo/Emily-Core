@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import roujo.emily.core.extensibility.capabilities.Capability;
+import roujo.emily.core.extensibility.capabilities.CapabilityManager;
 import roujo.emily.core.extensibility.capabilities.CapabilityUser;
 import roujo.emily.core.extensibility.capabilities.CommandManager;
 import roujo.emily.core.extensibility.capabilities.CommandUser;
@@ -26,11 +28,12 @@ public class PluginManager {
 	private Map<String, PluginInfo> loadedPlugins;
 	
 	// Plugin types
-	private List<CommandManager> commandManagers;
+	private Map<Capability, List<CapabilityManager>> capabilityManagers;
 	
 	private PluginManager() {
 		loadedPlugins = new LinkedHashMap<String, PluginInfo>();
-		commandManagers = new ArrayList<CommandManager>();
+		capabilityManagers = new TreeMap<Capability, List<CapabilityManager>>();
+		capabilityManagers.put(Capability.ManageCommands, new ArrayList<CapabilityManager>());
 	}
 	
 	public boolean reloadPlugin(String pluginName, File pluginFile) {
@@ -59,7 +62,7 @@ public class PluginManager {
 			loadedPlugins.put(pluginName, pluginInfo);
 			loader.close();
 			
-			processPlugin(pluginInfo);
+			processLoadedPlugin(pluginInfo);
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
@@ -78,16 +81,18 @@ public class PluginManager {
 		
 		PluginInfo pluginInfo = loadedPlugins.get(pluginName);
 		pluginInfo.getPlugin().unload();
+		processUnloadedPlugin(pluginInfo);
 		loadedPlugins.remove(pluginName);
 		System.out.println(pluginName + " has been unloaded successfully.");
 		return true;
 	}
 	
 	public boolean useCapability(CapabilityUser<? extends CommandManager> capabilityUser) {
-		switch(capabilityUser.getRequestedCapability()) {
+		Capability cap = capabilityUser.getRequestedCapability();
+		switch(cap) {
 		case ManageCommands:
-			for(CommandManager manager : commandManagers) {
-				if(((CommandUser) capabilityUser).use(manager))
+			for(CapabilityManager manager : capabilityManagers.get(cap)) {
+				if(((CommandUser) capabilityUser).use((CommandManager) manager))
 					return true;
 			}
 			return false;
@@ -97,18 +102,20 @@ public class PluginManager {
 		}
 	}
 	
-	private void processPlugin(PluginInfo pluginInfo) {
+	private void processLoadedPlugin(PluginInfo pluginInfo) {
 		List<Capability> capabilities = pluginInfo.getCapabilities();
 		for(Capability cap : capabilities) {
-			switch(cap) {
-			// Every cast here should not fail, as the capabilities
-			// were discovered by using Class.isInstance(plugin)
-			case ManageCommands:
-				commandManagers.add((CommandManager) pluginInfo.getPlugin());
-				break;
-			default:
-				System.out.println("Unsupported capability!");
-				break;			
+			if(capabilityManagers.containsKey(cap)) {
+				capabilityManagers.get(cap).add((CapabilityManager) pluginInfo.getPlugin());
+			}
+		}
+	}
+	
+	private void processUnloadedPlugin(PluginInfo pluginInfo) {
+		List<Capability> capabilities = pluginInfo.getCapabilities();
+		for(Capability cap : capabilities) {
+			if(capabilityManagers.containsKey(cap)) {
+				capabilityManagers.get(cap).remove(pluginInfo.getPlugin());
 			}
 		}
 	}
