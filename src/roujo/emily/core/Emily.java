@@ -23,7 +23,7 @@ public class Emily extends ListenerAdapter<PircBotX> {
 		bot.setName(nickname);
 		bot.setAutoNickChange(true);
 		bot.setLogin("Emily");
-		bot.setVersion("Emily v0.2 | IRC Bot based on PircBotX 1.9");
+		bot.setVersion("Emily v1.0 | IRC Bot based on PircBotX 1.9");
 	}
 
 	@Override
