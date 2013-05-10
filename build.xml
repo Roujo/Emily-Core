@@ -42,7 +42,7 @@
 	<target name="compile" depends="init" description="Compiles the classes in the project">
 		<mkdir dir="${build}" />
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" includeantruntime="false">
+		<javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false">
 			<classpath>
 				<pathelement location="lib/pircbotx-1.9.jar" />
 			</classpath>
@@ -53,8 +53,10 @@
           target: jar              
          ================================= -->
 	<target name="jar" depends="compile" description="Builds a jar archive of the project">
-		<jar destfile="${dist}/Emily.jar" basedir="${build}">
-			<zipgroupfileset dir="${lib}" includes="*.jar" /> 
+		<jar destfile="${dist}/Emily.jar">
+			<zipgroupfileset dir="${lib}" includes="*.jar" />
+			<fileset dir="${build}" />
+			<fileset dir="${src}" includes="**/*.java"/>
 			<manifest>
 				<attribute name="Main-Class" value="roujo.emily.core.Main" />
 			</manifest>
