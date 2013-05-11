@@ -14,6 +14,7 @@ import java.util.TreeMap;
 
 import roujo.emily.core.extensibility.capabilities.Capability;
 import roujo.emily.core.extensibility.capabilities.CapabilityManager;
+import roujo.emily.core.extensibility.capabilities.CapabilityUseException;
 import roujo.emily.core.extensibility.capabilities.CapabilityUser;
 import roujo.emily.core.extensibility.capabilities.CommandManager;
 import roujo.emily.core.extensibility.capabilities.CommandUser;
@@ -86,7 +87,7 @@ public class PluginManager {
 		return true;
 	}
 	
-	public boolean useCapability(CapabilityUser<? extends CommandManager> capabilityUser) {
+	public boolean useCapability(CapabilityUser<? extends CommandManager> capabilityUser) throws CapabilityUseException {
 		Capability cap = capabilityUser.getRequestedCapability();
 		switch(cap) {
 		case ManageCommands:
