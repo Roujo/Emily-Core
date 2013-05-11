@@ -39,7 +39,7 @@ public class PluginManager {
 	public boolean reloadPlugin(String pluginName) {
 		if(loadedPlugins.containsKey(pluginName)) {
 			PluginInfo pluginInfo = loadedPlugins.get(pluginName);
-			return unloadPlugin(pluginName) && loadPlugin(pluginInfo.getPluginFile());
+			return unloadPlugin(pluginName) && loadPlugin(pluginInfo.getPluginFile()) != null;
 		} else {
 			System.out.println(pluginName + " isn't loaded.");
 			return false;
@@ -47,7 +47,7 @@ public class PluginManager {
 		
 	}
 	
-	public boolean loadPlugin(File pluginFile) {		
+	public String loadPlugin(File pluginFile) {		
 		try {
 			String pluginPackage = pluginFile.getName().substring(0, pluginFile.getName().length() - 4);
 			URL pluginURL = new URL("file:" + pluginFile.getAbsolutePath());
@@ -63,11 +63,11 @@ public class PluginManager {
 			
 			processLoadedPlugin(pluginInfo);
 			System.out.println("Plugin " + pluginInfo.getPluginName() + " has been loaded successfully.");
-			return true;
+			return pluginInfo.getPluginName();
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 
