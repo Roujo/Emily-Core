@@ -58,12 +58,13 @@ public class PluginManager {
 			
 			plugin.load();
 			PluginInfo pluginInfo = new PluginInfo(pluginFile, plugin);
-			loadedPlugins.put(pluginPackage, pluginInfo);
+			String pluginName = pluginInfo.getPluginName();
+			loadedPlugins.put(pluginName, pluginInfo);
 			loader.close();
 			
 			processLoadedPlugin(pluginInfo);
-			System.out.println("Plugin " + pluginInfo.getPluginName() + " has been loaded successfully.");
-			return pluginInfo.getPluginName();
+			System.out.println("Plugin " + pluginName + " has been loaded successfully.");
+			return pluginName;
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
