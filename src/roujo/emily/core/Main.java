@@ -17,12 +17,9 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// Load all plugins
-		for (File file : new File("plugins/").listFiles()) {
-			if(file.getName().endsWith(".jar")) {
-				String pluginName = file.getName().substring(0, file.getName().length() - 4);
-				PluginManager.getInstance().loadPlugin(pluginName, file);
-			}
-		}
+		for (File file : new File("plugins/").listFiles())
+			if(file.getName().endsWith(".jar"))
+				PluginManager.getInstance().loadPlugin(file);
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));

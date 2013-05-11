@@ -39,7 +39,7 @@ public class PluginManager {
 	public boolean reloadPlugin(String pluginName) {
 		if(loadedPlugins.containsKey(pluginName)) {
 			PluginInfo pluginInfo = loadedPlugins.get(pluginName);
-			return unloadPlugin(pluginName) && loadPlugin(pluginName, pluginInfo.getPluginFile());
+			return unloadPlugin(pluginName) && loadPlugin(pluginInfo.getPluginFile());
 		} else {
 			System.out.println(pluginName + " isn't loaded.");
 			return false;
@@ -47,39 +47,28 @@ public class PluginManager {
 		
 	}
 	
-	public boolean loadPlugin(String pluginName, File pluginFile) {
-		// TODO: Determine the plugin name according to package name instead of file name
-		// For now, assume Plugin Name == Package Name
-		if(loadedPlugins.containsKey(pluginName)) {
-			System.out.println(pluginName + " was already loaded.");
-			return false;
-		}
-				
+	public boolean loadPlugin(File pluginFile) {		
 		try {
+			String pluginPackage = pluginFile.getName().substring(0, pluginFile.getName().length() - 4);
 			URL pluginURL = new URL("file:" + pluginFile.getAbsolutePath());
 			URLClassLoader loader = URLClassLoader.newInstance(new URL[]{ pluginURL }, getClass().getClassLoader());
-			Class<? extends Plugin> pluginClass = Class.forName(pluginName + ".PluginController", true, loader).asSubclass(Plugin.class);
+			Class<? extends Plugin> pluginClass = Class.forName(pluginPackage + ".PluginController", true, loader).asSubclass(Plugin.class);
 			Constructor<? extends Plugin> constructor = pluginClass.getConstructor();
 			Plugin plugin = constructor.newInstance();
-			if(plugin.getName() != pluginName) {
-				System.out.println(String.format("Name mismatch: Expected \"%s\", got \"%s\"", pluginName, plugin.getName()));
-				return false;
-			}
 			
 			plugin.load();
-			PluginInfo pluginInfo = new PluginInfo(pluginName, pluginFile, plugin);
-			loadedPlugins.put(pluginName, pluginInfo);
+			PluginInfo pluginInfo = new PluginInfo(pluginFile, plugin);
+			loadedPlugins.put(pluginPackage, pluginInfo);
 			loader.close();
 			
 			processLoadedPlugin(pluginInfo);
+			System.out.println("Plugin " + pluginInfo.getPluginName() + " has been loaded successfully.");
+			return true;
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
-		
-		System.out.println(pluginName + " has been loaded successfully.");
-		return true;
 	}
 
 	public boolean unloadPlugin(String pluginName) {
