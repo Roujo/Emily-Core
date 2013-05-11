@@ -61,6 +61,11 @@ public class PluginManager {
 			Class<? extends Plugin> pluginClass = Class.forName(pluginName + ".PluginController", true, loader).asSubclass(Plugin.class);
 			Constructor<? extends Plugin> constructor = pluginClass.getConstructor();
 			Plugin plugin = constructor.newInstance();
+			if(plugin.getName() != pluginName) {
+				System.out.println(String.format("Name mismatch: Expected \"%s\", got \"%s\"", pluginName, plugin.getName()));
+				return false;
+			}
+			
 			plugin.load();
 			PluginInfo pluginInfo = new PluginInfo(pluginName, pluginFile, plugin);
 			loadedPlugins.put(pluginName, pluginInfo);
