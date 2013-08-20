@@ -1,7 +1,7 @@
 package roujo.emily.core.util;
 
 public enum InternalUser {
-	Skynet(UserLevel.Owner, new String[] { "Skynet", "Skynet|Work" });
+	Skynet(UserLevel.Owner, new String[] { "Skynet", "Skynet|Work", "Roujo" });
 
 	private final UserLevel status;
 	private final String[] nicks;

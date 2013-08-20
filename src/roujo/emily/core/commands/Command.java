@@ -47,7 +47,7 @@ public abstract class Command {
 
 	protected String getArguments(MessageContext context) {
 		String strippedMessage;
-		if (context.hasBeenProcessed()) {
+		if (context.wasPrefixed()) {
 			strippedMessage = context.getProcessedMessage();
 		} else {
 			Matcher matcher = StringHelper

@@ -57,10 +57,10 @@ public class MessageContext {
 	}
 
 	public String getMessage() {
-		return hasBeenProcessed() ? processedMessage : message;
+		return wasPrefixed() ? processedMessage : message;
 	}
 	
-	public boolean hasBeenProcessed() {
+	public boolean wasPrefixed() {
 		return processedMessage != null;
 	}
 	
