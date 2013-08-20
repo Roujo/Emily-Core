@@ -1,24 +1,14 @@
 package roujo.emily.core.extensibility;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import roujo.emily.core.extensibility.capabilities.Capability;
 
 public class PluginInfo {
 	private final Plugin plugin;
 	private final File pluginFile;
-	private final List<Capability> capabilities;
 	
 	public PluginInfo(File pluginFile, Plugin plugin) {
 		this.plugin = plugin;
 		this.pluginFile = pluginFile;
-		
-		this.capabilities = new ArrayList<Capability>();
-		for(Capability cap : Capability.values())
-			if(cap.getCapabilityManager().isInstance(plugin))
-				this.capabilities.add(cap);
 	}
 
 	public Plugin getPlugin() {
@@ -27,10 +17,6 @@ public class PluginInfo {
 	
 	public File getPluginFile() {
 		return pluginFile;
-	}
-
-	public List<Capability> getCapabilities() {
-		return capabilities;
 	}
 
 	public String getPluginName() {

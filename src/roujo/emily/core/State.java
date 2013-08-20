@@ -1,10 +1,14 @@
 package roujo.emily.core;
 
 public class State {
-	private boolean shouldQuit;
+	public static final State INSTANCE = new State();
 	
-	public State() {
+	private boolean shouldQuit;
+	private String password;
+	
+	private State() {
 		shouldQuit = false;
+		password = "";
 	}
 
 	public boolean shouldQuit() {
@@ -13,5 +17,13 @@ public class State {
 
 	public void setShouldQuit(boolean shouldQuit) {
 		this.shouldQuit = shouldQuit;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;		
 	}
 }

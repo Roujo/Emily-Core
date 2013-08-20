@@ -6,35 +6,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
-import roujo.emily.core.extensibility.capabilities.Capability;
-import roujo.emily.core.extensibility.capabilities.CapabilityProcessor;
-import roujo.emily.core.extensibility.capabilities.CapabilityUseException;
-import roujo.emily.core.extensibility.capabilities.CapabilityUser;
-import roujo.emily.core.extensibility.capabilities.CommandProcessor;
-import roujo.emily.core.extensibility.capabilities.CommandUser;
 
 public class PluginManager {
-	private static PluginManager INSTANCE = new PluginManager();
-	
-	public static PluginManager getInstance() {
-		return INSTANCE;
-	}
+	public static final PluginManager INSTANCE = new PluginManager();
 	
 	private Map<String, PluginInfo> loadedPlugins;
 	
-	// Plugin types
-	private Map<Capability, List<CapabilityProcessor>> capabilityManagers;
-	
 	private PluginManager() {
 		loadedPlugins = new LinkedHashMap<String, PluginInfo>();
-		capabilityManagers = new TreeMap<Capability, List<CapabilityProcessor>>();
-		capabilityManagers.put(Capability.ProcessCommands, new ArrayList<CapabilityProcessor>());
 	}
 	
 	public boolean reloadPlugin(String pluginName) {
@@ -45,7 +27,6 @@ public class PluginManager {
 			System.out.println(pluginName + " isn't loaded.");
 			return false;
 		}
-		
 	}
 	
 	public String loadPlugin(File pluginFile) {		
@@ -63,7 +44,6 @@ public class PluginManager {
 			loadedPlugins.put(pluginName, pluginInfo);
 			loader.close();
 			
-			processLoadedPlugin(pluginInfo);
 			System.out.println("Plugin " + pluginName + " has been loaded successfully.");
 			return pluginName;
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
@@ -81,42 +61,12 @@ public class PluginManager {
 		
 		PluginInfo pluginInfo = loadedPlugins.get(pluginName);
 		pluginInfo.getPlugin().unload();
-		processUnloadedPlugin(pluginInfo);
 		loadedPlugins.remove(pluginName);
 		System.out.println(pluginName + " has been unloaded successfully.");
 		return true;
 	}
 	
-	public boolean useCapability(CapabilityUser<? extends CommandProcessor> capabilityUser) throws CapabilityUseException {
-		Capability cap = capabilityUser.getRequestedCapability();
-		switch(cap) {
-		case ProcessCommands:
-			for(CapabilityProcessor manager : capabilityManagers.get(cap)) {
-				if(((CommandUser) capabilityUser).use((CommandProcessor) manager))
-					return true;
-			}
-			return false;
-		default:
-			System.out.println("Unsupported capability!");
-			return false;
-		}
-	}
-	
-	private void processLoadedPlugin(PluginInfo pluginInfo) {
-		List<Capability> capabilities = pluginInfo.getCapabilities();
-		for(Capability cap : capabilities) {
-			if(capabilityManagers.containsKey(cap)) {
-				capabilityManagers.get(cap).add((CapabilityProcessor) pluginInfo.getPlugin());
-			}
-		}
-	}
-	
-	private void processUnloadedPlugin(PluginInfo pluginInfo) {
-		List<Capability> capabilities = pluginInfo.getCapabilities();
-		for(Capability cap : capabilities) {
-			if(capabilityManagers.containsKey(cap)) {
-				capabilityManagers.get(cap).remove(pluginInfo.getPlugin());
-			}
-		}
+	protected Collection<PluginInfo> getPluginInfos() {
+		return loadedPlugins.values();
 	}
 }
