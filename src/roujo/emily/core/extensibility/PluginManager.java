@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import roujo.emily.core.extensibility.capabilities.Capability;
-import roujo.emily.core.extensibility.capabilities.CapabilityManager;
+import roujo.emily.core.extensibility.capabilities.CapabilityProcessor;
 import roujo.emily.core.extensibility.capabilities.CapabilityUseException;
 import roujo.emily.core.extensibility.capabilities.CapabilityUser;
-import roujo.emily.core.extensibility.capabilities.CommandManager;
+import roujo.emily.core.extensibility.capabilities.CommandProcessor;
 import roujo.emily.core.extensibility.capabilities.CommandUser;
 
 public class PluginManager {
@@ -29,12 +29,12 @@ public class PluginManager {
 	private Map<String, PluginInfo> loadedPlugins;
 	
 	// Plugin types
-	private Map<Capability, List<CapabilityManager>> capabilityManagers;
+	private Map<Capability, List<CapabilityProcessor>> capabilityManagers;
 	
 	private PluginManager() {
 		loadedPlugins = new LinkedHashMap<String, PluginInfo>();
-		capabilityManagers = new TreeMap<Capability, List<CapabilityManager>>();
-		capabilityManagers.put(Capability.ManageCommands, new ArrayList<CapabilityManager>());
+		capabilityManagers = new TreeMap<Capability, List<CapabilityProcessor>>();
+		capabilityManagers.put(Capability.ProcessCommands, new ArrayList<CapabilityProcessor>());
 	}
 	
 	public boolean reloadPlugin(String pluginName) {
@@ -87,12 +87,12 @@ public class PluginManager {
 		return true;
 	}
 	
-	public boolean useCapability(CapabilityUser<? extends CommandManager> capabilityUser) throws CapabilityUseException {
+	public boolean useCapability(CapabilityUser<? extends CommandProcessor> capabilityUser) throws CapabilityUseException {
 		Capability cap = capabilityUser.getRequestedCapability();
 		switch(cap) {
-		case ManageCommands:
-			for(CapabilityManager manager : capabilityManagers.get(cap)) {
-				if(((CommandUser) capabilityUser).use((CommandManager) manager))
+		case ProcessCommands:
+			for(CapabilityProcessor manager : capabilityManagers.get(cap)) {
+				if(((CommandUser) capabilityUser).use((CommandProcessor) manager))
 					return true;
 			}
 			return false;
@@ -106,7 +106,7 @@ public class PluginManager {
 		List<Capability> capabilities = pluginInfo.getCapabilities();
 		for(Capability cap : capabilities) {
 			if(capabilityManagers.containsKey(cap)) {
-				capabilityManagers.get(cap).add((CapabilityManager) pluginInfo.getPlugin());
+				capabilityManagers.get(cap).add((CapabilityProcessor) pluginInfo.getPlugin());
 			}
 		}
 	}

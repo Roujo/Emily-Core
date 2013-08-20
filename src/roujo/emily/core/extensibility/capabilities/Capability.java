@@ -1,15 +1,15 @@
 package roujo.emily.core.extensibility.capabilities;
 
 public enum Capability {
-	ManageCommands(CommandManager.class);
+	ProcessCommands(CommandProcessor.class);
 	
-	private final Class<? extends CapabilityManager> capabilityManager;
+	private final Class<? extends CapabilityProcessor> capabilityProcessor;
 	
-	private Capability(Class<? extends CapabilityManager> capabilityManager) {
-		this.capabilityManager = capabilityManager;
+	private Capability(Class<? extends CapabilityProcessor> capabilityProcessor) {
+		this.capabilityProcessor = capabilityProcessor;
 	}
 
 	public Class<?> getCapabilityManager() {
-		return capabilityManager;
+		return capabilityProcessor;
 	}
 }

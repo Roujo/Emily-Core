@@ -2,7 +2,7 @@ package roujo.emily.core.extensibility.capabilities;
 
 import roujo.emily.core.MessageContext;
 
-public class CommandUser implements CapabilityUser<CommandManager> {
+public class CommandUser implements CapabilityUser<CommandProcessor> {
 	private MessageContext context;
 	
 	public CommandUser(MessageContext context) {
@@ -11,11 +11,11 @@ public class CommandUser implements CapabilityUser<CommandManager> {
 	
 	@Override
 	public Capability getRequestedCapability() {
-		return Capability.ManageCommands;
+		return Capability.ProcessCommands;
 	}
 
 	@Override
-	public boolean use(CommandManager commandManager) {
-		return commandManager.processMessage(context);
+	public boolean use(CommandProcessor commandManager) {
+		return commandManager.processCommand(context);
 	}	
 }
