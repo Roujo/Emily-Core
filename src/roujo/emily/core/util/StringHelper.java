@@ -22,7 +22,7 @@ public class StringHelper {
 	}
 	
 	public static boolean isChannel(String string) {
-		return string.matches("#[#A-z0-9_]*");
+		return string.matches("#[#A-z0-9_-]*");
 	}
 	
 	public static String[] keepChannels(String[] strings) {
