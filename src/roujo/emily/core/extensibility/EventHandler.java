@@ -64,7 +64,7 @@ public class EventHandler extends ListenerAdapter<PircBotX> {
 	
 	public String extractCommandFromMessage(GenericMessageEvent<PircBotX> event) {
 		Matcher matcher = StringHelper.getPatternFromNick(
-				event.getBot().getNick()).matcher(event.getMessage().replaceAll("\\p{C}", ""));
+				event.getBot().getNick()).matcher(event.getMessage());
 
 		if (matcher.matches()) {
 			return matcher.group(1);
