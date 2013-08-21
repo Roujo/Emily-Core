@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import org.pircbotx.PircBotX;
+import org.pircbotx.UtilSSLSocketFactory;
 
 import roujo.emily.core.extensibility.PluginManager;
 
@@ -61,7 +62,7 @@ public class Main {
 		} else {
 			System.out.println("Emily: Connecting to " + args[2]);
 			try {
-				bot.connect(args[2]);
+				bot.connect(args[2], 6697, new UtilSSLSocketFactory().trustAllCertificates());
 			} catch (Exception e) {
 				logError(e);
 			}
