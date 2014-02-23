@@ -17,7 +17,7 @@ public class Emily extends ListenerAdapter<PircBotX> {
 		bot.setName(nickname);
 		bot.setAutoNickChange(true);
 		bot.setLogin("Emily");
-		bot.setVersion("Emily v2.0 | IRC Bot based on PircBotX 1.9");
+		bot.setVersion("Emily v" + Info.Version + " | IRC Bot based on PircBotX 1.9");
 	}
 
 	// Has to be reworked, so removed for now
